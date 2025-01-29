@@ -14,33 +14,41 @@
 
 ## Installation
 
-## 1. Clone this repository:
+1. Clone this repository:
 
    ```bash
    git clone https://github.com/sarojamarraj/virustotal-file-scanner.git
    cd virustotal-file-scanner
 
-## 2. Configure API Key: To interact with the VirusTotal API, you'll need an API key.
+## 2. Configure API Key:
+    To interact with the VirusTotal API, you'll need an API key.
    Get your VirusTotal API key.
    Create a .env file in the root directory of the project
-   Example .env
+Example .env
    VT_API_KEY=your-api-key-here
 
    Alternatively, you can set the VT_API_KEY as an environment variable in your Docker container (explained below).
    
 
-## 3.  Build the Docker Image:
-   Make sure Docker is installed on your system. In the root directory of your project, build the Docker image:
+## 3. Build the Docker Image:
+   Make sure Docker is installed on your system. 
+   In the root directory of your project, build the Docker image:
+
+   
    docker build -t virustotal-file-scanner .
 
 
 ## 4. Run the Docker Container.
    To run the scanner and scan files, use the following command. This will mount your local files and quarantine directories into the Docker container:
+
+   
    docker run -v /path/to/your/files:/app/files -v /path/to/your/quarantine:/app/quarantine virustotal-file-scanner
 
 Replace /path/to/your/files and /path/to/your/quarantine with the paths to your local directories where you want the files and quarantined files to be stored.
 
 If you don't want to set up the .env file manually, you can pass the API key directly via the Docker command:
+
+
 docker run -e VT_API_KEY=your-api-key-here -v /path/to/your/files:/app/files -v /path/to/your/quarantine:/app/quarantine virustotal-file-scanner
 
 
@@ -56,12 +64,16 @@ Files and Directories
 
 ## Script Structure
 scan.py: Main file scanning script that interacts with the VirusTotal API.
+
 files/: Directory containing files to be scanned.
+
 quarantine/: Directory for quarantining malicious files.
 
 ## Example Output
 Scanning /app/files/chisel.exe...
+
 Scan ID: <scan_id> - File is MALICIOUS (51 detections). Moving to quarantine.
+
 Error scanning chisel.exe: [Errno 18] Invalid cross-device link: '/app/files/chisel.exe' -> '/app/quarantine/chisel.exe'
 
 Scanning /app/files/test.xml...
