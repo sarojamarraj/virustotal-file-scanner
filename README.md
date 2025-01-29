@@ -9,43 +9,55 @@
 - Supports scanning multiple files in a directory.
   
 ## Prerequisites
-- **Python 3.x**: Ensure Python 3 is installed on your machine.
-- **VirusTotal API Key**: You'll need to obtain an API key from [VirusTotal](https://www.virustotal.com/) in order to use the API.
+- Docker (to run the container)
+- VirusTotal API key
 
 ## Installation
 
-1. Clone this repository:
+## 1. Clone this repository:
 
    ```bash
    git clone https://github.com/sarojamarraj/virustotal-file-scanner.git
    cd virustotal-file-scanner
 
-2. Install required Python libraries:
-   pip install -r requirements.txt
+## 2. Configure API Key: To interact with the VirusTotal API, you'll need an API key.
+   Get your VirusTotal API key.
+   Create a .env file in the root directory of the project
+   Example .env
+   VT_API_KEY=your-api-key-here
 
-3. Set up your VirusTotal API key:
-   Rename the .env.example file to .env and paste your VirusTotal API key inside the VT_API_KEY variable.
-   cp .env.example .env
+   Alternatively, you can set the VT_API_KEY as an environment variable in your Docker container (explained below).
+   
 
-4. Alternatively, you can set the VT_API_KEY directly in the script for testing purposes (not recommended for production).
+## 3.  Build the Docker Image:
+   Make sure Docker is installed on your system. In the root directory of your project, build the Docker image:
+   docker build -t virustotal-file-scanner .
 
 
+## 4. Run the Docker Container.
+   To run the scanner and scan files, use the following command. This will mount your local files and quarantine directories into the Docker container:
+   docker run -v /path/to/your/files:/app/files -v /path/to/your/quarantine:/app/quarantine virustotal-file-scanner
 
-## Usage
+Replace /path/to/your/files and /path/to/your/quarantine with the paths to your local directories where you want the files and quarantined files to be stored.
+
+If you don't want to set up the .env file manually, you can pass the API key directly via the Docker command:
+docker run -e VT_API_KEY=your-api-key-here -v /path/to/your/files:/app/files -v /path/to/your/quarantine:/app/quarantine virustotal-file-scanner
+
+
+## 5. View the Results
 Place the files you want to scan into the files/ directory.
 
-Run the scanner with the following command:
-python scan.py
+After running the container, check the quarantine directory for any files flagged as malicious. The scanner will move any malicious files there.
 
-The script will scan all files in the files/ directory. Malicious files will be moved to the quarantine/ directory.
-Check the logs or the output terminal for the results of each file scan.
+Files and Directories
+/app/files: The directory where the files to be scanned are stored.
+/app/quarantine: The directory where any malicious files will be moved.
+
 
 ## Script Structure
 scan.py: Main file scanning script that interacts with the VirusTotal API.
 files/: Directory containing files to be scanned.
 quarantine/: Directory for quarantining malicious files.
-requirements.txt: Python dependencies for the project.
-.env.example: Example file to set up your VirusTotal API key.
 
 ## Example Output
 Scanning /app/files/chisel.exe...
